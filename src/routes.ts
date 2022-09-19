@@ -5,7 +5,7 @@ const router = Router();
 
 const tracesController = new TracesController();
 
-router.get('/traces', tracesController.dummy)
+router.post('/traces', tracesController.getIPTrace)
 router.get('/statistics', tracesController.dummy);
 
 export default router;
