@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import IpAPIService from '../services/ipApiService';
 import FixerService from '../services/fixerService';
 import { ITraceRequest, ITraceResponse } from '../types/IpRequestType';
+import { TraceModel } from '../models/trace';
 
 const ipApiService = new IpAPIService();
 const fixerService = new FixerService();
@@ -18,6 +19,7 @@ export default class TracesController {
         //  TODO: Refactor into custom error responses
         if (!ip) return res.status(400).send('Missing IP');
 
+        //  TODO: Refactor into "business" layer
         const apiResponse = await ipApiService.getIpData(ip);
 
         const rates = await fixerService.latestRate(apiResponse.data.currency);
@@ -35,6 +37,14 @@ export default class TracesController {
                 }
             ]
         }
+
+        const trace = new TraceModel({
+            country: response.name,
+            ip: response.ip
+        });
+
+        //  Don't await saving to release response execution
+        trace.save();
 
         return res.send(response)
     }
