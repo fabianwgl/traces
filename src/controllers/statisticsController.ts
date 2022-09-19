@@ -15,6 +15,10 @@ interface StatisticsResposne {
 
 @Route('statistics')
 export default class StatisticsController {
+    constructor() {
+        this.getStatistics = this.getStatistics.bind(this);
+    }
+
     async getStatistics(req: Request, res: Response) {
         try {
             const response = await this.handleStatistics();

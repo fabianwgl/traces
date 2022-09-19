@@ -50,3 +50,9 @@ This project can be built with Docker just by using the following commands
 docker build . -t <your username>/cookunity
 docker run -p 8000:3000 -d <your username>/node-web-app
 ```
+
+
+## TODO:
+
+- implement redis cache
+- improve testing

@@ -3,34 +3,26 @@ import IpAPIService from '../services/ipApiService';
 import FixerService from '../services/fixerService';
 import { ITraceRequest, ITraceResponse } from '../types/IpRequestType';
 import { TraceModel } from '../models/trace';
-import { Get, Route, Post } from "tsoa";
+import { Get, Route, Post, Body } from "tsoa";
 
 const ipApiService = new IpAPIService();
 const fixerService = new FixerService();
 
-// @Route("traces")
+interface traceCreation {
+    ip: string
+}
+
+@Route("traces")
 export default class TracesController {
+    constructor() {
+        this.getIPTrace = this.getIPTrace.bind(this);
+    }
 
     dummy(req: Request, res: Response) {
         res.send('dummy');
     }
 
-    async getIPTrace(req: ITraceRequest, res: Response) {
-        //  TODO: Check API format
-        const { ip } = req.body;
-        //  TODO: Refactor into custom error responses
-        if (!ip) return res.status(400).send('Missing IP');
-
-        try {
-            const response = await this.handleIPTrace(ip);
-            res.send(response);
-        } catch(e) {
-            res.status(400).send(e);
-        }
-    }
-
-    // @Post("/")
-    async handleIPTrace(ip: string): Promise<ITraceResponse> {
+    private async handleIPTrace( ip: string): Promise<ITraceResponse> {
         //  TODO: Refactor into "business" layer
         const apiResponse = await ipApiService.getIpData(ip);
         if(apiResponse.data.status !== 'success') throw new Error('Error encountered with the provided IP')
@@ -60,5 +52,21 @@ export default class TracesController {
         trace.save();
         
         return response;
+    }
+
+    async getIPTrace(req: ITraceRequest, res: Response) {
+        //  TODO: Check API format
+        const { ip } = req.body;
+
+        //  TODO: Refactor into custom error responses
+        if (!ip) return res.status(400).send('Missing IP');
+
+        try {
+            const response = await this.handleIPTrace(ip);
+            res.send(response);
+        } catch(e) {
+            console.log({e})
+            res.status(400).send(e);
+        }
     }
 }
