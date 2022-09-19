@@ -8,7 +8,7 @@ class IpAPIService {
     }
 
     getIpData(ip: string) {
-        return axios.get(`${this.baseUrl}${ip}`);
+        return axios.get(`${this.baseUrl}${ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,currency,isp,org,as,query`);
     }
 }
 

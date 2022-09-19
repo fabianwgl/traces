@@ -3,8 +3,27 @@ import { Request, Response } from 'express';
 interface IBody {
     ip: string
 }
+
 interface ITraceRequest extends Request {
     body: IBody
 }
 
-export { ITraceRequest };
+interface ICurrencies {
+    iso: string,
+    symbol: string,
+    conversion_rate: string
+}
+
+interface ITraceResponse extends Response {
+    data: {
+        ip: string,
+        name: string,
+        code: string,
+        lat: string,
+        lon: string,
+        currencies: [],
+        distance_to_usa: number
+    }
+}
+
+export { ITraceRequest, ITraceResponse };
