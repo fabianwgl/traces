@@ -21,6 +21,7 @@ export default class TracesController {
 
         //  TODO: Refactor into "business" layer
         const apiResponse = await ipApiService.getIpData(ip);
+        if(apiResponse.data.status !== 'success') return res.status(400).send('Problems parsing IP');
 
         const rates = await fixerService.latestRate(apiResponse.data.currency);
 
