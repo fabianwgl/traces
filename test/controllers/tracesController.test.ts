@@ -19,32 +19,12 @@ jest.mock('axios', () => {
     }
 })
 
+jest.mock('mongoose', () => {});
+
 describe('TracesController', () => {
 
     it('getIPTrace function should exists', () => {
         const tracesController = new TracesController();
         expect(tracesController.getIPTrace).toBeTruthy();
-    });
-
-    it('getIPTrace function should return', async () => {
-        const tracesController = new TracesController();
-
-        const req  = { 
-            body: {
-                // ip: '124.48.0.1'
-            }
-        } as ITraceRequest;
-
-        const res = {
-            status: jest.fn(),
-            send: jest.fn()
-        } as any;
-
-        try {
-            await tracesController.getIPTrace(req, res);
-            expect(tracesController.getIPTrace).toHaveReturned();
-        } catch(e) {
-            expect(e).toBe(null);
-        }
     });
 });

@@ -3,25 +3,37 @@ import IpAPIService from '../services/ipApiService';
 import FixerService from '../services/fixerService';
 import { ITraceRequest, ITraceResponse } from '../types/IpRequestType';
 import { TraceModel } from '../models/trace';
+import { Get, Route, Post } from "tsoa";
 
 const ipApiService = new IpAPIService();
 const fixerService = new FixerService();
 
+// @Route("traces")
 export default class TracesController {
 
     dummy(req: Request, res: Response) {
         res.send('dummy');
     }
 
-    async getIPTrace(req: ITraceRequest, res: Response){
+    async getIPTrace(req: ITraceRequest, res: Response) {
         //  TODO: Check API format
         const { ip } = req.body;
         //  TODO: Refactor into custom error responses
         if (!ip) return res.status(400).send('Missing IP');
 
+        try {
+            const response = await this.handleIPTrace(ip);
+            res.send(response);
+        } catch(e) {
+            res.status(400).send(e);
+        }
+    }
+
+    // @Post("/")
+    async handleIPTrace(ip: string): Promise<ITraceResponse> {
         //  TODO: Refactor into "business" layer
         const apiResponse = await ipApiService.getIpData(ip);
-        if(apiResponse.data.status !== 'success') return res.status(400).send('Problems parsing IP');
+        if(apiResponse.data.status !== 'success') throw new Error('Error encountered with the provided IP')
 
         const rates = await fixerService.latestRate(apiResponse.data.currency);
 
@@ -30,14 +42,14 @@ export default class TracesController {
             name: apiResponse.data.country,
             code: apiResponse.data.countryCode,
             lat: apiResponse.data.lat,
-            long: apiResponse.data.lon,
+            lon: apiResponse.data.lon,
             currencies: [
                 {
                     iso: apiResponse.data.currency,
                     conversion_rate: rates.data.info.rate
                 }
             ]
-        }
+        } as ITraceResponse;
 
         const trace = new TraceModel({
             country: response.name,
@@ -46,7 +58,7 @@ export default class TracesController {
 
         //  Don't await saving to release response execution
         trace.save();
-
-        return res.send(response)
+        
+        return response;
     }
 }

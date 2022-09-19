@@ -1,0 +1,75 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"StatisticsResposne": {
+				"properties": {
+					"most_traced": {
+						"properties": {
+							"value": {
+								"type": "number",
+								"format": "double"
+							},
+							"country": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"value",
+							"country"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"most_traced"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "ip-trace",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "Fabian General ",
+			"email": "fabianwgl@gmail.com"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/statistics": {
+			"get": {
+				"operationId": "HandleStatistics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StatisticsResposne"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

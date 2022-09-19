@@ -10,20 +10,18 @@ interface ITraceRequest extends Request {
 
 interface ICurrencies {
     iso: string,
-    symbol: string,
+    // symbol: string,
     conversion_rate: string
 }
 
-interface ITraceResponse extends Response {
-    data: {
-        ip: string,
-        name: string,
-        code: string,
-        lat: string,
-        lon: string,
-        currencies: [],
-        distance_to_usa: number
-    }
+interface ITraceResponse {
+    ip: string,
+    name: string,
+    code: string,
+    lat: string,
+    lon: string,
+    currencies: ICurrencies[],
+    // distance_to_usa?: number
 }
 
 export { ITraceRequest, ITraceResponse };
