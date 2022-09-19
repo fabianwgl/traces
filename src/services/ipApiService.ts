@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-class IpAPIService {
+export default class IpAPIService {
     private baseUrl: string;
 
     constructor() {
@@ -11,5 +11,3 @@ class IpAPIService {
         return axios.get(`${this.baseUrl}${ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,currency,isp,org,as,query`);
     }
 }
-
-export default IpAPIService;

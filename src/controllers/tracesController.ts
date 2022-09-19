@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import IpAPIService from '../services/ipApiService';
+import FixerService from '../services/fixerService';
 import { ITraceRequest, ITraceResponse } from '../types/IpRequestType';
 
-const ipApiService = new IpAPIService()
+const ipApiService = new IpAPIService();
+const fixerService = new FixerService();
+
 export default class TracesController {
 
     dummy(req: Request, res: Response) {
@@ -17,13 +20,20 @@ export default class TracesController {
 
         const apiResponse = await ipApiService.getIpData(ip);
 
+        const rates = await fixerService.latestRate(apiResponse.data.currency);
+
         const response = {
             ip: apiResponse.data.query,
             name: apiResponse.data.country,
             code: apiResponse.data.countryCode,
             lat: apiResponse.data.lat,
             long: apiResponse.data.lon,
-            currency: [apiResponse.data.currency]
+            currencies: [
+                {
+                    iso: apiResponse.data.currency,
+                    conversion_rate: rates.data.info.rate
+                }
+            ]
         }
 
         return res.send(response)
